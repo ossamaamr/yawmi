@@ -13,14 +13,17 @@ jobs:
       - name: 📥 سحب الكود
         uses: actions/checkout@v4
 
-      - name: ⚙️ إعداد Node.js
+      - name: ⚙️ إعداد Node.js (الإصدار 20 المطلوب)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
           cache: 'npm'
 
-      - name: 📦 تثبيت التبعيات
+      - name: 📦 تثبيت التبعيات (مع تجاوز التعارضات)
         run: npm install --legacy-peer-deps
+
+      - name: 🧪 التحقق من صحة ملف app.json
+        run: npx expo config --json
 
       - name: ☕ إعداد Java
         uses: actions/setup-java@v4
@@ -31,17 +34,18 @@ jobs:
       - name: 📱 إعداد Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 🛠️ إنشاء مجلد Android وبناء APK (Release مع تحسين الحجم)
+      - name: 🛠️ إنشاء مجلد Android وبناء APK
         run: |
           npx expo prebuild --platform android --clean
           cd android
-          ./gradlew assembleRelease
+          chmod +x gradlew
+          ./gradlew assembleDebug --stacktrace
         env:
           NPM_CONFIG_LEGACY_PEER_DEPS: true
-          # تجاوز فشل التوقيع باستخدام debug keystore (مضمن في build.gradle أعلاه)
+          GRADLE_OPTS: "-Xmx4g -XX:MaxMetaspaceSize=512m"
 
       - name: 📤 رفع APK
         uses: actions/upload-artifact@v4
         with:
-          name: yawmi-app-optimized
-          path: android/app/build/outputs/apk/release/*.apk
+          name: yawmi-app-debug
+          path: android/app/build/outputs/apk/debug/*.apk

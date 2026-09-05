@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="108" height="108">
+  <defs>
+    <linearGradient id="adaptiveGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#818CF8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="adaptiveCheck" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34D399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background fill -->
+  <rect width="108" height="108" fill="url(#adaptiveGrad)"/>
+
+  <!-- Calendar page - centered in safe zone (18-90 range) -->
+  <rect x="26" y="20" width="38" height="46" rx="3.5" fill="white" opacity="0.95"/>
+
+  <!-- Calendar top bar -->
+  <rect x="26" y="20" width="38" height="6" rx="3.5" fill="#E0E7FF"/>
+  <rect x="26" y="23" width="38" height="3" fill="#E0E7FF"/>
+
+  <!-- Calendar rings -->
+  <rect x="29" y="17" width="3" height="6.5" rx="1.2" fill="#C7D2FE"/>
+  <rect x="35" y="17" width="3" height="6.5" rx="1.2" fill="#C7D2FE"/>
+  <rect x="41" y="17" width="3" height="6.5" rx="1.2" fill="#C7D2FE"/>
+  <rect x="47" y="17" width="3" height="6.5" rx="1.2" fill="#C7D2FE"/>
+  <rect x="53" y="17" width="3" height="6.5" rx="1.2" fill="#C7D2FE"/>
+  <rect x="59" y="17" width="3" height="6.5" rx="1.2" fill="#C7D2FE"/>
+
+  <!-- Separator line -->
+  <line x1="26" y1="28" x2="64" y2="28" stroke="#DDD6FE" stroke-width="0.8"/>
+
+  <!-- Checkmark -->
+  <path d="M32 40 L37 45.5 L50 33" stroke="url(#adaptiveCheck)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Dots row 1 -->
+  <circle cx="30" cy="52" r="1.5" fill="#DDD6FE"/>
+  <circle cx="35.5" cy="52" r="1.5" fill="#DDD6FE"/>
+  <circle cx="41" cy="52" r="1.5" fill="#DDD6FE"/>
+  <circle cx="46.5" cy="52" r="1.5" fill="#DDD6FE"/>
+  <circle cx="52" cy="52" r="1.5" fill="#DDD6FE"/>
+  <circle cx="57.5" cy="52" r="1.5" fill="#DDD6FE"/>
+
+  <!-- Dots row 2 -->
+  <circle cx="30" cy="57.5" r="1.5" fill="#DDD6FE"/>
+  <circle cx="35.5" cy="57.5" r="1.5" fill="#DDD6FE"/>
+  <circle cx="41" cy="57.5" r="1.5" fill="#DDD6FE"/>
+  <circle cx="46.5" cy="57.5" r="1.5" fill="#C7D2FE"/>
+  <circle cx="52" cy="57.5" r="1.5" fill="#C7D2FE"/>
+  <circle cx="57.5" cy="57.5" r="1.5" fill="#C7D2FE"/>
+</svg>

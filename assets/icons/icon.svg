@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <defs>
+    <linearGradient id="iconGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#818CF8;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#6366F1;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="checkGradIcon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#34D399;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#10B981;stop-opacity:1" />
+    </linearGradient>
+    <filter id="iconShadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#4338CA" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Rounded square background -->
+  <rect x="48" y="48" width="928" height="928" rx="180" fill="url(#iconGrad)" filter="url(#iconShadow)"/>
+
+  <!-- Calendar page body -->
+  <rect x="280" y="220" width="360" height="420" rx="32" fill="white" opacity="0.95"/>
+
+  <!-- Calendar top bar -->
+  <rect x="280" y="220" width="360" height="50" rx="32" fill="#E0E7FF"/>
+  <rect x="280" y="244" width="360" height="26" fill="#E0E7FF"/>
+
+  <!-- Calendar rings -->
+  <rect x="310" y="196" width="28" height="56" rx="10" fill="#C7D2FE"/>
+  <rect x="360" y="196" width="28" height="56" rx="10" fill="#C7D2FE"/>
+  <rect x="410" y="196" width="28" height="56" rx="10" fill="#C7D2FE"/>
+  <rect x="460" y="196" width="28" height="56" rx="10" fill="#C7D2FE"/>
+  <rect x="510" y="196" width="28" height="56" rx="10" fill="#C7D2FE"/>
+  <rect x="560" y="196" width="28" height="56" rx="10" fill="#C7D2FE"/>
+
+  <!-- Horizontal separator inside calendar -->
+  <line x1="280" y1="280" x2="640" y2="280" stroke="#DDD6FE" stroke-width="4"/>
+
+  <!-- Checkmark -->
+  <path d="M340 410 L400 470 L560 330" stroke="url(#checkGradIcon)" stroke-width="38" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Small dots row 1 -->
+  <circle cx="320" cy="540" r="14" fill="#DDD6FE"/>
+  <circle cx="370" cy="540" r="14" fill="#DDD6FE"/>
+  <circle cx="420" cy="540" r="14" fill="#DDD6FE"/>
+  <circle cx="470" cy="540" r="14" fill="#DDD6FE"/>
+  <circle cx="520" cy="540" r="14" fill="#DDD6FE"/>
+  <circle cx="570" cy="540" r="14" fill="#DDD6FE"/>
+
+  <!-- Small dots row 2 -->
+  <circle cx="320" cy="590" r="14" fill="#DDD6FE"/>
+  <circle cx="370" cy="590" r="14" fill="#DDD6FE"/>
+  <circle cx="420" cy="590" r="14" fill="#DDD6FE"/>
+  <circle cx="470" cy="590" r="14" fill="#C7D2FE"/>
+  <circle cx="520" cy="590" r="14" fill="#C7D2FE"/>
+  <circle cx="570" cy="590" r="14" fill="#C7D2FE"/>
+</svg>

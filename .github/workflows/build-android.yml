@@ -1,0 +1,46 @@
+name: Build Android APK (Clean)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 سحب الكود
+        uses: actions/checkout@v4
+
+      - name: ⚙️ إعداد Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: 📦 تثبيت التبعيات
+        run: npm install --legacy-peer-deps
+
+      - name: ☕ إعداد Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 📱 إعداد Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🛠️ بناء APK (نسخة Debug - قابلة للتثبيت فوراً)
+        run: |
+          npx expo prebuild --platform android --clean
+          cd android
+          ./gradlew assembleDebug
+        env:
+          NPM_CONFIG_LEGACY_PEER_DEPS: true
+
+      - name: 📤 رفع APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: yawmi-app-debug
+          path: android/app/build/outputs/apk/debug/*.apk

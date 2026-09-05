@@ -1,4 +1,4 @@
-name: Build Android APK (Clean)
+name: Build Android APK (Optimized)
 
 on:
   push:
@@ -31,16 +31,17 @@ jobs:
       - name: 📱 إعداد Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: 🛠️ بناء APK (نسخة Debug - قابلة للتثبيت فوراً)
+      - name: 🛠️ إنشاء مجلد Android وبناء APK (Release مع تحسين الحجم)
         run: |
           npx expo prebuild --platform android --clean
           cd android
-          ./gradlew assembleDebug
+          ./gradlew assembleRelease
         env:
           NPM_CONFIG_LEGACY_PEER_DEPS: true
+          # تجاوز فشل التوقيع باستخدام debug keystore (مضمن في build.gradle أعلاه)
 
       - name: 📤 رفع APK
         uses: actions/upload-artifact@v4
         with:
-          name: yawmi-app-debug
-          path: android/app/build/outputs/apk/debug/*.apk
+          name: yawmi-app-optimized
+          path: android/app/build/outputs/apk/release/*.apk

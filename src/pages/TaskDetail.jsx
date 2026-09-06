@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import { CategoryBadge, PriorityBadge } from '../components/TaskCard';
 import {
   formatArabicDate,
+  formatArabicTime,
   relativeDayLabel,
 } from '../lib/utils';
 
@@ -21,9 +22,9 @@ export default function TaskDetail() {
 
   if (loading) {
     return (
-      <div className="page">
-        <div className="center-screen">
-          <div className="spinner" />
+      <div className="صفحة">
+        <div className="شاشة-مركزية">
+          <div className="مؤشر" />
         </div>
       </div>
     );
@@ -31,11 +32,11 @@ export default function TaskDetail() {
 
   if (!task) {
     return (
-      <div className="page">
-        <div className="empty">
-          <div className="empty-icon">؟</div>
+      <div className="صفحة">
+        <div className="فارغ">
+          <div className="أيقونة-فارغ">؟</div>
           <h3>المهمة غير موجودة</h3>
-          <Link to="/" className="btn">العودة لليوم</Link>
+          <Link to="/" className="زر">العودة لليوم</Link>
         </div>
       </div>
     );
@@ -53,67 +54,73 @@ export default function TaskDetail() {
   };
 
   return (
-    <div className="page">
-      <header className="page-header">
-        <button type="button" className="icon-btn" onClick={() => navigate(-1)} aria-label="رجوع">
+    <div className="صفحة">
+      <header className="رأس-الصفحة">
+        <button type="button" className="زر-أيقونة" onClick={() => navigate(-1)} aria-label="رجوع">
           →
         </button>
         <h1>تفاصيل المهمة</h1>
-        <Link to={`/task/${task.id}/edit`} className="btn btn-sm btn-soft">تعديل</Link>
+        <Link to={`/task/${task.id}/edit`} className="زر زر-صغير زر-ناعم">تعديل</Link>
       </header>
 
-      <div className="card detail-card">
-        <div className="row-between">
-          <h2 className={isDone ? 'strikethrough' : ''}>{task.title}</h2>
+      <div className="بطاقة بطاقة-التفاصيل">
+        <div className="صف-بين">
+          <h2 className={isDone ? 'مشطوب' : ''}>{task.title}</h2>
           <PriorityBadge priority={task.priority} />
         </div>
 
-        {task.description && <p className="detail-desc">{task.description}</p>}
+        {task.description && <p className="وصف-التفاصيل">{task.description}</p>}
 
-        <div className="detail-list">
-          <div className="detail-row">
-            <span className="detail-label">التاريخ</span>
+        <div className="قائمة-التفاصيل">
+          <div className="صف-التفاصيل">
+            <span className="تسمية-التفاصيل">التاريخ</span>
             <span>{relativeDayLabel(task.dueDate)} — {formatArabicDate(task.dueDate)}</span>
           </div>
-          <div className="detail-row">
-            <span className="detail-label">الوقت</span>
-            <span>{task.dueTime || 'طوال اليوم'}</span>
+          <div className="صف-التفاصيل">
+            <span className="تسمية-التفاصيل">الوقت</span>
+            <span>{task.dueTime ? formatArabicTime(task.dueTime) : 'طوال اليوم'}</span>
           </div>
-          <div className="detail-row">
-            <span className="detail-label">الفئة</span>
-            <span><CategoryBadge category={task.category} /> {task.category}</span>
+          <div className="صف-التفاصيل">
+            <span className="تسمية-التفاصيل">الفئة</span>
+            <span><CategoryBadge category={task.category} /></span>
           </div>
-          <div className="detail-row">
-            <span className="detail-label">التكرار</span>
+          <div className="صف-التفاصيل">
+            <span className="تسمية-التفاصيل">التكرار</span>
             <span>{task.isRecurring ? '🔁 متكرر' : 'بدون تكرار'}</span>
           </div>
-          <div className="detail-row">
-            <span className="detail-label">التقدم</span>
+          {task.ringtone && (
+            <div className="صف-التفاصيل">
+              <span className="تسمية-التفاصيل">نغمة المنبه</span>
+              <span>🔔 نغمة مخصصة</span>
+            </div>
+          )}
+          <div className="صف-التفاصيل">
+            <span className="تسمية-التفاصيل">التقدم</span>
             <span>{task.isProgressive ? '📈 تدريجي' : '—'}</span>
           </div>
-          <div className="detail-row">
-            <span className="detail-label">الحالة</span>
+          <div className="صف-التفاصيل">
+            <span className="تسمية-التفاصيل">الحالة</span>
             <span>{isDone ? 'مكتملة ✓' : 'نشطة'}</span>
           </div>
           {task.completedAt && (
-            <div className="detail-row">
-              <span className="detail-label">أُنجزت في</span>
+            <div className="صف-التفاصيل">
+              <span className="تسمية-التفاصيل">أُنجزت في</span>
               <span>{formatArabicDate(task.completedAt)}</span>
             </div>
           )}
         </div>
 
-        <div className="detail-actions">
+        <div className="أزرار-التفاصيل">
           <button
             type="button"
-            className={`btn ${isDone ? 'btn-soft' : 'btn-accent'}`}
+            className={`زر ${isDone ? 'زر-ناعم' : 'زر-مميز'}`}
             onClick={() => completeTask(task.id, Date.now())}
           >
             {isDone ? 'إلغاء الإكمال' : 'إكمال المهمة ✓'}
           </button>
           <button
             type="button"
-            className={`btn ${confirming ? 'btn-danger' : 'btn-ghost'}`}
+            className={`زر ${confirming ? 'زر-خطر' : 'زر-شفاف'}`}
             onClick={handleDelete}
           >
             {confirming ? 'تأكيد الحذف؟' : 'حذف'}

@@ -1,12 +1,13 @@
 // ══════════════════════════════════════════════════════════
 // pages/Progress.jsx — شاشة التقدم والإحصائيات
+// أسماء الأيام كاملة في مخطط آخر ٧ أيام.
 // ══════════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
 import { useTaskContext } from '../context/TaskContext';
 import Footer from '../components/Footer';
 import { toArabicNumerals, addDays } from '../lib/utils';
 
-const DAY_NAMES = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
+const DAY_NAMES = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
 export default function Progress() {
   const { tasks, loading, getStats } = useTaskContext();
@@ -25,9 +26,9 @@ export default function Progress() {
 
   if (loading || !stats) {
     return (
-      <div className="page">
-        <div className="center-screen">
-          <div className="spinner" />
+      <div className="صفحة">
+        <div className="شاشة-مركزية">
+          <div className="مؤشر" />
         </div>
       </div>
     );
@@ -42,64 +43,64 @@ export default function Progress() {
   const maxCount = Math.max(1, ...days.map((d) => d.count));
 
   return (
-    <div className="page">
-      <header className="page-header">
+    <div className="صفحة">
+      <header className="رأس-الصفحة">
         <h1>التقدم</h1>
       </header>
 
-      <div className="stats-grid">
-        <div className="stat-card">
-          <span className="stat-value">{toArabicNumerals(stats.totalCompleted)}</span>
-          <span className="stat-label">إجمالي المُنجز</span>
+      <div className="شبكة-الإحصائيات">
+        <div className="بطاقة-الإحصاء">
+          <span className="قيمة-الإحصاء">{toArabicNumerals(stats.totalCompleted)}</span>
+          <span className="تسمية-الإحصاء">إجمالي المُنجز</span>
         </div>
-        <div className="stat-card">
-          <span className="stat-value">{toArabicNumerals(stats.completedToday)}</span>
-          <span className="stat-label">اليوم</span>
+        <div className="بطاقة-الإحصاء">
+          <span className="قيمة-الإحصاء">{toArabicNumerals(stats.completedToday)}</span>
+          <span className="تسمية-الإحصاء">اليوم</span>
         </div>
-        <div className="stat-card">
-          <span className="stat-value">{toArabicNumerals(stats.completedThisWeek)}</span>
-          <span className="stat-label">هذا الأسبوع</span>
+        <div className="بطاقة-الإحصاء">
+          <span className="قيمة-الإحصاء">{toArabicNumerals(stats.completedThisWeek)}</span>
+          <span className="تسمية-الإحصاء">هذا الأسبوع</span>
         </div>
       </div>
 
-      <div className="card chart-card">
+      <div className="بطاقة بطاقة-المخطط">
         <h2>آخر ٧ أيام</h2>
-        <div className="bar-chart">
+        <div className="مخطط-الأعمدة">
           {days.map((d, i) => (
-            <div key={i} className="bar-col">
-              <span className="bar-value">{d.count > 0 ? toArabicNumerals(d.count) : ''}</span>
+            <div key={i} className="عمود-المخطط">
+              <span className="قيمة-العمود">{d.count > 0 ? toArabicNumerals(d.count) : ''}</span>
               <div
-                className="bar"
+                className="شريط-المخطط"
                 style={{ height: `${Math.max(8, (d.count / maxCount) * 80)}px`, opacity: d.count ? 1 : 0.25 }}
               />
-              <span className="bar-label">{d.label}</span>
+              <span className="تسمية-العمود">{d.label}</span>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="card progression-card">
+      <div className="بطاقة بطاقة-التقدم">
         <h2>المهام التدريجية</h2>
         {stats.progresses.length === 0 ? (
-          <p className="text-soft">لا توجد مهام تدريجية بعد.</p>
+          <p className="نص-ناعم">لا توجد مهام تدريجية بعد.</p>
         ) : (
-          <div className="stack">
+          <div className="عمود">
             {stats.progresses.map((p) => (
-              <div key={p.id} className="progression-row">
-                <div className="grow">
-                  <div className="row-between">
+              <div key={p.id} className="صف-التقدم">
+                <div className="مرن">
+                  <div className="صف-بين">
                     <strong>{p.taskTitle}</strong>
-                    <span className="text-soft">
+                    <span className="نص-ناعم">
                       {p.currentCursor} ← {p.target || toArabicNumerals(p.totalAmount)}
                     </span>
                   </div>
-                  <div className="progress-track">
+                  <div className="مسار-التقدم">
                     <div
-                      className="progress-fill"
+                      className="حشو-التقدم"
                       style={{ width: `${Math.min(100, (p.completedAmount / p.totalAmount) * 100)}%` }}
                     />
                   </div>
-                  <div className="row-between text-soft">
+                  <div className="صف-بين نص-ناعم">
                     <span>{p.status === 'completed' ? '✓ مكتمل' : `انتهى ${toArabicNumerals(p.completedAmount)} من ${toArabicNumerals(p.totalAmount)}`}</span>
                     <span>{p.status === 'completed' ? 'عظيم! 🎉' : 'واصل!'}</span>
                   </div>

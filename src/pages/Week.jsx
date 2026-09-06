@@ -1,5 +1,6 @@
 // ══════════════════════════════════════════════════════════
 // pages/Week.jsx — شاشة الأسبوع (7 أيام)
+// أسماء الأيام تظهر كاملة: الأحد، الإثنين، الثلاثاء… إلخ.
 // ══════════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
 import { useTaskContext } from '../context/TaskContext';
@@ -7,7 +8,7 @@ import TaskList from '../components/TaskList';
 import Footer from '../components/Footer';
 import { getWeekStart, getArabicDayName, toArabicNumerals, isToday } from '../lib/utils';
 
-const DAY_LABELS = ['أحد', 'إثن', 'ثلا', 'أرب', 'خمي', 'جمع', 'سبت'];
+const DAY_LABELS = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
 export default function Week() {
   const { tasks, loading, getTasksForRange, completeTask } = useTaskContext();
@@ -31,27 +32,27 @@ export default function Week() {
   const selected = weekTasks[selectedDay ?? 0];
 
   return (
-    <div className="page">
-      <header className="page-header">
+    <div className="صفحة">
+      <header className="رأس-الصفحة">
         <h1>الأسبوع</h1>
       </header>
 
-      <div className="week-strip" role="tablist" aria-label="أيام الأسبوع">
+      <div className="شريط-الأسبوع" role="tablist" aria-label="أيام الأسبوع">
         {weekTasks.map((d, i) => {
           const date = new Date(d.dayStart);
           return (
             <button
               key={d.dayStart}
               type="button"
-              className={`week-day ${selectedDay === i ? 'active' : ''} ${isToday(d.dayStart) ? 'is-today' : ''}`}
+              className={`يوم-الأسبوع ${selectedDay === i ? 'نشط' : ''} ${isToday(d.dayStart) ? 'هو-اليوم' : ''}`}
               onClick={() => setSelectedDay(i)}
               role="tab"
               aria-selected={selectedDay === i}
             >
-              <span className="week-day-name">{DAY_LABELS[date.getDay()]}</span>
-              <span className="week-day-num">{toArabicNumerals(date.getDate())}</span>
+              <span className="اسم-اليوم">{DAY_LABELS[date.getDay()]}</span>
+              <span className="رقم-اليوم">{toArabicNumerals(date.getDate())}</span>
               {d.items.filter((x) => !x.completed).length > 0 && (
-                <span className="week-day-count">{toArabicNumerals(d.items.filter((x) => !x.completed).length)}</span>
+                <span className="عدد-اليوم">{toArabicNumerals(d.items.filter((x) => !x.completed).length)}</span>
               )}
             </button>
           );
@@ -59,8 +60,8 @@ export default function Week() {
       </div>
 
       {loading && (
-        <div className="center-screen" style={{ minHeight: '30vh' }}>
-          <div className="spinner" />
+        <div className="شاشة-مركزية" style={{ minHeight: '30vh' }}>
+          <div className="مؤشر" />
         </div>
       )}
 

@@ -1,10 +1,13 @@
 // ══════════════════════════════════════════════════════════
 // lib/notifications.js — الإشعارات المحلية (Capacitor Local Notifications)
 // بدون أي خادم خارجي. تُجدول محليًا وتُلغى عند حذف المهمة.
+// يدعم طلب الإذن الصحيح على أندرويد ١٣+، ويتيح فتح إعدادات النظام
+// عند رفض المستخدم حتى يفعّل الإشعارات بنفسه.
 // على الويب (Web) نكتفي بإشعار عبر المتصفح عند الطلب، إن توفر.
 // ══════════════════════════════════════════════════════════
 import { Capacitor } from '@capacitor/core';
 import { LocalNotifications } from '@capacitor/local-notifications';
+import { NativeSettings, AndroidSettings, IOSSettings } from 'capacitor-native-settings';
 
 let nativeAvailable = false;
 let webGranted = false;
@@ -30,12 +33,13 @@ export async function notificationsSupported() {
   return typeof Notification !== 'undefined' && Notification.permission === 'granted';
 }
 
+// طلب الصلاحية بالطريقة الرسمية (مهم على أندرويد 13+)
 export async function requestNotificationPermission() {
   if (isNative()) {
     try {
       nativeAvailable = true;
       const result = await LocalNotifications.requestPermissions();
-      return result.display === 'granted';
+      return result.display === 'granted' || result.display === 'limited';
     } catch {
       return false;
     }
@@ -48,15 +52,35 @@ export async function requestNotificationPermission() {
   return false;
 }
 
+// فتح إعدادات النظام الخاصة بالإشعارات: يعيد المستخدم إلى شاشة
+// إشعارات التطبيق حتى يفعّلها يدويًا إن كان رفضها سابقًا.
+export async function openSystemNotificationSettings() {
+  if (!isNative()) return false;
+  try {
+    const result = await NativeSettings.open({
+      optionAndroid: AndroidSettings.AppNotification,
+      optionIOS: IOSSettings.App,
+    });
+    return result.status;
+  } catch {
+    return false;
+  }
+}
+
 // جدولة إشعار عند زمن محدد (بالمللي ثانية)
-export async function scheduleNotification({ id, title, body, at }) {
+// sound: اختياري — اسم مورد صوتي (Android) أو المسار المختار من الجهاز.
+export async function scheduleNotification({ id, title, body, at, sound }) {
   const fireAt = new Date(at);
   if (!(fireAt.getTime() > Date.now())) return null;
 
   if (isNative() && nativeAvailable) {
+    const notification =
+      sound && typeof sound === 'string' && sound.length > 0
+        ? { id, title, body, schedule: { at: fireAt }, sound }
+        : { id, title, body, schedule: { at: fireAt } };
     try {
       await LocalNotifications.schedule({
-        notifications: [{ id, title, body, schedule: { at: fireAt } }],
+        notifications: [notification],
       });
       return id;
     } catch {

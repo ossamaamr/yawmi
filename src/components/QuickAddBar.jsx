@@ -30,16 +30,16 @@ export default function QuickAddBar() {
   };
 
   return (
-    <form className="quick-add" onSubmit={submit}>
+    <form className="شريط-الإضافة-السريعة" onSubmit={submit}>
       <input
-        className="input quick-add-input"
+        className="مدخل مدخل-الإضافة-السريعة"
         type="text"
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="أضف مهمة سريعة… مثال: قراءة ساعة غداً الساعة ٨"
         aria-label="إضافة مهمة سريعة"
       />
-      <button type="submit" className="btn btn-accent quick-add-btn" disabled={!text.trim()}>
+      <button type="submit" className="زر زر-مميز زر-الإضافة-السريعة" disabled={!text.trim()}>
         ✓
       </button>
     </form>

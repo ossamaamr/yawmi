@@ -3,9 +3,9 @@
 // ══════════════════════════════════════════════════════════
 export default function Footer() {
   return (
-    <footer className="app-credit">
-      تطوير: <span className="credit-name">أسامة بن عمرو السَّروجيّ</span>
-      <span className="credit-heart">⚡ يومي — محلي بالكامل</span>
+    <footer className="سجل-التطبيق">
+      تطوير: <span className="اسم-المطور">أسامة بن عمرو السَّروجيّ</span>
+      <span className="قلب-الائتمان">⚡ يومي — محلي بالكامل</span>
     </footer>
   );
 }

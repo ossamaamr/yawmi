@@ -1,55 +1,80 @@
 // ══════════════════════════════════════════════════════════
 // pages/Today.jsx — شاشة اليوم (الرئيسية)
+// تعرض الحماسة القرآنيّة أعلى الصفحة، وتنبيه الإشعارات مع رابط
+// لإعدادات النظام عند رفض الإذن.
 // ══════════════════════════════════════════════════════════
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useTaskContext } from '../context/TaskContext';
 import { useSettingsContext } from '../context/SettingsContext';
 import QuickAddBar from '../components/QuickAddBar';
 import TaskList from '../components/TaskList';
 import Footer from '../components/Footer';
-import { formatArabicDate } from '../lib/utils';
 import { toArabicNumerals } from '../lib/utils';
 
 export default function Today() {
   const { tasks, loading, getTasksForDate, completeTask } = useTaskContext();
-  const { notificationsEnabled, notificationsSupportedFlag, enableNotifications } = useSettingsContext();
+  const {
+    notificationsEnabled,
+    notificationsSupportedFlag,
+    enableNotifications,
+    goToNotificationSettings,
+    quranStreak,
+  } = useSettingsContext();
   const [items, setItems] = useState([]);
-  const [loadedDay, setLoadedDay] = useState(null);
+  const [permDenied, setPermDenied] = useState(false);
 
   useEffect(() => {
     let active = true;
     getTasksForDate(Date.now()).then((result) => {
       if (!active) return;
       setItems(result);
-      setLoadedDay(Date.now());
     });
     return () => {
       active = false;
     };
   }, [tasks, getTasksForDate]);
 
+  const handleEnable = async () => {
+    const granted = await enableNotifications();
+    if (!granted) setPermDenied(true);
+  };
+
   const pendingCount = items.filter((i) => !i.completed).length;
   const doneCount = items.filter((i) => i.completed).length;
 
   return (
-    <div className="page">
-      <header className="page-header today-header">
-        <div>
-          <h1>يومي</h1>
-          <p className="today-date">{formatArabicDate(loadedDay ?? Date.now())}</p>
-        </div>
+    <div className="صفحة">
+      <header className="رأس-الصفحة رأس-اليوم">
+        <h1>يومي</h1>
         {pendingCount > 0 && (
-          <span className="seek-ring" title="المتبقي اليوم">
-            <span>{toArabicNumerals(pendingCount)}</span>
+          <span className="حلقة-الإنجاز" title="المتبقي اليوم">
+            {toArabicNumerals(pendingCount)}
           </span>
         )}
       </header>
 
-      {!notificationsEnabled && notificationsSupportedFlag && (
-        <div className="alert alert-info">
-          <div className="grow">فعّل الإشعارات ليصلك تذكير بمهامك في موعدها (يعمل دون إنترنت).</div>
-          <button type="button" className="btn btn-sm" onClick={enableNotifications}>
+      {quranStreak > 0 && (
+        <Link to="/quran" className="بطاقة وسم-الحماسة-بطاقة">
+          🔥 حماسك القرآني: {toArabicNumerals(quranStreak)}{' '}
+          {quranStreak === 1 ? 'يوم' : quranStreak === 2 ? 'يومان' : 'أيام'} متتالية
+        </Link>
+      )}
+
+      {!notificationsEnabled && notificationsSupportedFlag && !permDenied && (
+        <div className="تنبيه تنبيه-معلومات">
+          <div className="مرن">فعّل الإشعارات ليصلك تذكير بمهامك في موعدها (يعمل دون إنترنت).</div>
+          <button type="button" className="زر زر-صغير" onClick={handleEnable}>
             تفعيل
+          </button>
+        </div>
+      )}
+
+      {permDenied && (
+        <div className="تنبيه تنبيه-تحذير">
+          <div className="مرن">رُفض إذن الإشعارات — فعّله من إعدادات النظام مباشرة.</div>
+          <button type="button" className="زر زر-صغير" onClick={goToNotificationSettings}>
+            فتح الإعدادات
           </button>
         </div>
       )}
@@ -57,8 +82,8 @@ export default function Today() {
       <QuickAddBar />
 
       {loading && (
-        <div className="center-screen" style={{ minHeight: '30vh' }}>
-          <div className="spinner" />
+        <div className="شاشة-مركزية" style={{ minHeight: '30vh' }}>
+          <div className="مؤشر" />
         </div>
       )}
 
@@ -72,7 +97,7 @@ export default function Today() {
       )}
 
       {doneCount > 0 && pendingCount === 0 && (
-        <p className="all-done text-center">أنجزتِ كل مهامك اليوم! 🎉</p>
+        <p className="كل-منجز نص-مركز">أنجزتِ كل مهامك اليوم! 🎉</p>
       )}
 
       <Footer />

@@ -4,6 +4,7 @@ module.exports = {
   parserOptions: { ecmaVersion: 2022, sourceType: 'module', ecmaFeatures: { jsx: true } },
   extends: ['eslint:recommended', 'plugin:react/recommended'],
   settings: { react: { version: 'detect' } },
+  ignorePatterns: ['dist/**', 'android/**', 'node_modules/**'],
   rules: {
     'react/react-in-jsx-scope': 'off',
     'react/prop-types': 'off',

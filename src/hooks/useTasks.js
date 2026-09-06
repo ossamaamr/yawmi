@@ -34,7 +34,7 @@ import {
   cancelNotification,
   taskFireTime,
 } from '../lib/notifications';
-import { startOfDay, endOfDay } from '../lib/utils';
+import { startOfDay, endOfDay, formatArabicTime } from '../lib/utils';
 
 // id رقمي ثابت للمهمة لاستخدامه في الإشعارات
 function numericId(taskId) {
@@ -146,6 +146,7 @@ export function useTasks() {
         notificationId: null,
         completedAt: null,
         tags: input.tags || [],
+        ringtone: input.ringtone || null,
         createdAt: now,
         updatedAt: now,
       };
@@ -285,8 +286,9 @@ export function useTasks() {
       const scheduled = await scheduleNotification({
         id,
         title: '⏰ ' + task.title,
-        body: task.dueTime ? `حان موعد مهمتك ${task.dueTime}` : 'أدّي مهمتك الآن',
+        body: task.dueTime ? `حان موعد مهمتك ${formatArabicTime(task.dueTime)}` : 'أدّي مهمتك الآن',
         at: fireAt,
+        sound: task.ringtone || undefined,
       });
       if (scheduled) await updateTask(task.id, { notificationId: id });
     },

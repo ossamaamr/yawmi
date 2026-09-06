@@ -11,10 +11,10 @@ function DaySection({ label, items, onToggle }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="day-section">
-      <div className="day-section-header">
+    <div className="قسم-اليوم">
+      <div className="رأس-قسم-اليوم">
         <h3>{label}</h3>
-        <span className="count-badge">
+        <span className="وسم-العدد">
           {pending.length ? `${toArabicNumerals(pending.length)} باقية` : 'مكتمل ✓'}
         </span>
       </div>
@@ -22,7 +22,7 @@ function DaySection({ label, items, onToggle }) {
         <TaskCard key={item.task.id} item={item} onToggle={onToggle} />
       ))}
       {done.length > 0 && (
-        <div className="done-group">
+        <div className="مجموعة-المنجزة">
           {done.map((item) => (
             <TaskCard key={item.task.id} item={item} onToggle={onToggle} />
           ))}
@@ -35,8 +35,8 @@ function DaySection({ label, items, onToggle }) {
 export default function TaskList({ sections, onToggle, emptyTitle, emptyHint }) {
   if (!sections || sections.length === 0 || sections.every((s) => !s.items.length)) {
     return (
-      <div className="empty">
-        <div className="empty-icon">✓</div>
+      <div className="فارغ">
+        <div className="أيقونة-فارغ">✓</div>
         <h3>{emptyTitle || 'لا توجد مهام'}</h3>
         <p>{emptyHint || 'أضف مهمة جديدة لبدء يومك'}</p>
       </div>
@@ -44,7 +44,7 @@ export default function TaskList({ sections, onToggle, emptyTitle, emptyHint }) 
   }
 
   return (
-    <div className="task-list">
+    <div className="قائمة-المهام">
       {sections.map((s) => (
         <DaySection
           key={s.key || s.dayStart}

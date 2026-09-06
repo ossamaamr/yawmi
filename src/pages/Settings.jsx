@@ -1,5 +1,6 @@
 // ══════════════════════════════════════════════════════════
 // pages/Settings.jsx — الإعدادات
+// تشمل الإشعارات مع التوجيه لإعدادات النظام عند رفض الإذن.
 // ══════════════════════════════════════════════════════════
 import { useState } from 'react';
 import { useSettingsContext } from '../context/SettingsContext';
@@ -7,6 +8,7 @@ import { useTaskContext } from '../context/TaskContext';
 import Footer from '../components/Footer';
 import { exportAllData, importAllData, clearAllData } from '../lib/db';
 import { cancelAllNotifications } from '../lib/notifications';
+import { toArabicNumerals } from '../lib/utils';
 
 const PALETTES = [
   { value: 'default', label: 'أصلي', color: '#4d7c4a' },
@@ -22,6 +24,7 @@ export default function Settings() {
   const { tasks, reload } = useTaskContext();
   const [message, setMessage] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
+  const [notifDenied, setNotifDenied] = useState(false);
 
   const flash = (text) => {
     setMessage(text);
@@ -65,105 +68,114 @@ export default function Settings() {
     flash('تم مسح جميع البيانات.');
   };
 
+  const handleEnable = async () => {
+    const granted = await settings.enableNotifications();
+    if (!granted) setNotifDenied(true);
+  };
+
   return (
-    <div className="page">
-      <header className="page-header">
+    <div className="صفحة">
+      <header className="رأس-الصفحة">
         <h1>الإعدادات</h1>
       </header>
 
-      {message && <div className="alert alert-success">{message}</div>}
+      {message && <div className="تنبيه تنبيه-نجاح">{message}</div>}
 
-      <div className="card settings-card">
+      <div className="بطاقة بطاقة-الإعدادات">
         <h2>المظهر</h2>
-        <div className="field">
+        <div className="حقل">
           <label>الثيم</label>
-          <div className="chip-row">
-            <button type="button" className={`chip ${settings.theme === 'light' ? 'active' : ''}`} onClick={() => settings.update({ theme: 'light' })}>
+          <div className="صف-أزرار-صغيرة">
+            <button type="button" className={`زر-صغير ${settings.theme === 'light' ? 'نشط' : ''}`} onClick={() => settings.update({ theme: 'light' })}>
               ☀️ فاتح
             </button>
-            <button type="button" className={`chip ${settings.theme === 'dark' ? 'active' : ''}`} onClick={() => settings.update({ theme: 'dark' })}>
+            <button type="button" className={`زر-صغير ${settings.theme === 'dark' ? 'نشط' : ''}`} onClick={() => settings.update({ theme: 'dark' })}>
               🌙 داكن
             </button>
-            <button type="button" className={`chip ${settings.theme === 'system' ? 'active' : ''}`} onClick={() => settings.update({ theme: 'system' })}>
+            <button type="button" className={`زر-صغير ${settings.theme === 'system' ? 'نشط' : ''}`} onClick={() => settings.update({ theme: 'system' })}>
               🖥 النظام
             </button>
           </div>
         </div>
 
-        <div className="field">
+        <div className="حقل">
           <label>اللون الأساسي</label>
-          <div className="chip-row">
+          <div className="صف-أزرار-صغيرة">
             {PALETTES.map((p) => (
               <button
                 key={p.value}
                 type="button"
-                className={`chip ${settings.palette === p.value ? 'active' : ''}`}
+                className={`زر-صغير ${settings.palette === p.value ? 'نشط' : ''}`}
                 onClick={() => settings.update({ palette: p.value })}
               >
-                <span className="palette-dot" style={{ background: p.color }} />
+                <span className="نقطة-اللوحة" style={{ background: p.color }} />
                 {p.label}
               </button>
             ))}
           </div>
         </div>
 
-        <div className="field">
+        <div className="حقل">
           <label>حجم الخط</label>
-          <div className="chip-row">
-            <button type="button" className={`chip ${settings.fontSize === 'normal' ? 'active' : ''}`} onClick={() => settings.update({ fontSize: 'normal' })}>
+          <div className="صف-أزرار-صغيرة">
+            <button type="button" className={`زر-صغير ${settings.fontSize === 'normal' ? 'نشط' : ''}`} onClick={() => settings.update({ fontSize: 'normal' })}>
               عادي
             </button>
-            <button type="button" className={`chip ${settings.fontSize === 'large' ? 'active' : ''}`} onClick={() => settings.update({ fontSize: 'large' })}>
+            <button type="button" className={`زر-صغير ${settings.fontSize === 'large' ? 'نشط' : ''}`} onClick={() => settings.update({ fontSize: 'large' })}>
               كبير
             </button>
           </div>
         </div>
       </div>
 
-      <div className="card settings-card">
+      <div className="بطاقة بطاقة-الإعدادات">
         <h2>الإشعارات</h2>
-        <p className="text-soft">الإشعارات محلية بالكامل وتعمل بدون إنترنت.</p>
+        <p className="نص-ناعم">الإشعارات محلية بالكامل وتعمل دون إنترنت.</p>
         {settings.notificationsEnabled ? (
-          <button type="button" className="btn btn-ghost" onClick={() => settings.disableNotifications()}>
+          <button type="button" className="زر زر-شفاف" onClick={() => settings.disableNotifications()}>
             إيقاف الإشعارات
           </button>
+        ) : notifDenied ? (
+          <button type="button" className="زر" onClick={settings.goToNotificationSettings}>
+            الفتح من إعدادات النظام
+          </button>
         ) : (
-          <button type="button" className="btn" onClick={() => settings.enableNotifications()}>
+          <button type="button" className="زر" onClick={handleEnable}>
             تفعيل الإشعارات
           </button>
         )}
       </div>
 
-      <div className="card settings-card">
+      <div className="بطاقة بطاقة-الإعدادات">
         <h2>البيانات</h2>
-        <div className="stack">
-          <p className="text-soft">عدد المهام: {tasks.length} — كل بياناتك على جهازك فقط.</p>
-          <button type="button" className="btn btn-soft" onClick={doExport}>تصدير البيانات (نسخة احتياطية)</button>
-          <label className="btn btn-soft btn-block">
+        <div className="عمود">
+          <p className="نص-ناعم">عدد المهام: {toArabicNumerals(tasks.length)} — كل بياناتك على جهازك فقط.</p>
+          <button type="button" className="زر زر-ناعم" onClick={doExport}>تصدير البيانات (نسخة احتياطية)</button>
+          <label className="زر زر-ناعم زر-بعرض-كامل">
             استيراد نسخة احتياطية
             <input
               type="file"
               accept="application/json"
-              className="visually-hidden"
+              className="مخفي-بصريا"
               onChange={(e) => {
                 if (e.target.files?.[0]) doImport(e.target.files[0]);
                 e.target.value = '';
               }}
             />
           </label>
-          <button type="button" className={`btn ${confirmReset ? 'btn-danger' : 'btn-ghost'}`} onClick={doReset}>
+          <button type="button" className={`زر ${confirmReset ? 'زر-خطر' : 'زر-شفاف'}`} onClick={doReset}>
             {confirmReset ? 'تأكيد مسح كل البيانات؟' : 'إعادة تعيين البيانات'}
           </button>
         </div>
       </div>
 
-      <div className="card settings-card">
+      <div className="بطاقة بطاقة-الإعدادات">
         <h2>حول</h2>
         <p>
-          <strong>يومي</strong> — تطبيق مهام يومية، محلي بالكامل (Offline-first):
-          لا يوجد خادم خارجي، ولا حساب، ولا مزامنة. بياناتك تبقى على جهازك.
+          <strong>يومي</strong> — تطبيق مهام يومية يخدمك في وردك وعبادتك وتنظيم وقتك.
+          التطبيق يعمل محليًا بالكامل: لا خادم خارجي ولا حساب ولا مزامنة، وبياناتك تبقى على جهازك.
         </p>
-        <p className="text-soft">الإصدار 2.0.0 — مبني بمحرك Capacitor لتطبيقات أندرويد.</p>
+        <p className="نص-ناعم">الإصدار ٢٫٠٫٠.</p>
       </div>
 
       <Footer />

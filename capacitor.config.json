@@ -1,0 +1,20 @@
+{
+  "appId": "com.ossamaamr.yawmi",
+  "appName": "يومي",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  },
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_icon",
+      "iconColor": "#4d7c4a",
+      "sound": "default"
+    }
+  },
+  "android": {
+    "allowMixedContent": false,
+    "icon": "assets/icon.png",
+    "splash": "assets/splash-icon.png"
+  }
+}

@@ -1,11 +1,12 @@
 ﻿node_modules/
-.expo/
 dist/
 android/
 ios/
+.expo/
 *.log
 .DS_Store
 *.keystore
 *.jks
 keystore.properties
 .env
+.env.production

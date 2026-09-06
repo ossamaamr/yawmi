@@ -1,0 +1,58 @@
+name: Build Android APK (Optimized)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 سحب الكود
+        uses: actions/checkout@v4
+
+      - name: ⚙️ إعداد Node.js (الإصدار 20 المطلوب)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 تثبيت التبعيات
+        run: npm ci
+
+      - name: 🏗️ بناء تطبيق الويب
+        run: npm run build
+
+      - name: ☕ إعداد Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 📱 إعداد Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: 🔧 مزامنة Capacitor
+        run: |
+          npx cap sync android
+          npx cap copy android
+
+      - name: ⚙️ تفعيل تحسين الحجم (ProGuard + ShrinkResources)
+        run: node scripts/configure-release-build.mjs
+
+      - name: 🛠️ بناء APK (Release مع ضغط الموارد)
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleRelease --no-daemon
+        env:
+          GRADLE_OPTS: "-Xmx4g -XX:MaxMetaspaceSize=512m"
+
+      - name: 📤 رفع APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: yawmi-app
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
